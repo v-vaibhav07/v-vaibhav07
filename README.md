@@ -73,18 +73,10 @@
 
 ---
 
-## 🏆 Goals for 2026
-
-- 🚀 Crack top tech internships  
-- 📈 Improve Codeforces & LeetCode ratings  
-- 💡 Build impactful full-stack projects  
-
----
-
 ## 🌐 Connect with Me
 
 📧 Email: [vaibhavyadav6533@gmail.com](mailto:vaibhavyadav6533@gmail.com)  
-💼 LinkedIn: *(Add your link here)*  
+💼 LinkedIn: https://www.linkedin.com/in/vaibhav-yadav-b9b6b9377/  
 🐙 GitHub: https://github.com/v-vaibhav07  
 
 ---
