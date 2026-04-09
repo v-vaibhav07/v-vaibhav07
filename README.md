@@ -1,614 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>GitHub Style - Pinned Items Interface</title>
-  <!-- Font Awesome 6 (free icons) for icons like search, pin, edit, etc. -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <!-- Google Fonts: Inter (similar to GitHub's system font) -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: linear-gradient(145deg, #0d1117 0%, #0a0c10 100%);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-      color: #e6edf3;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 2rem 1.5rem;
-    }
-
-    /* main card container – mimics GitHub profile section */
-    .github-card {
-      max-width: 880px;
-      width: 100%;
-      background-color: #0d1117;
-      border-radius: 24px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
-      overflow: hidden;
-      transition: all 0.2s ease;
-    }
-
-    /* inner content with padding */
-    .card-content {
-      padding: 1.8rem 2rem 2rem 2rem;
-    }
-
-    /* header area: title and edit profile link */
-    .profile-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-      border-bottom: 1px solid #21262d;
-      padding-bottom: 1rem;
-    }
-
-    .title-section h1 {
-      font-size: 1.7rem;
-      font-weight: 600;
-      letter-spacing: -0.3px;
-      background: linear-gradient(135deg, #f0f6fc, #c9d1d9);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-
-    .edit-profile-btn {
-      background: transparent;
-      border: 1px solid #3d444d;
-      border-radius: 40px;
-      padding: 0.4rem 1rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #c9d1d9;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: default;
-      transition: 0.2s;
-      font-family: inherit;
-    }
-
-    .edit-profile-btn i {
-      font-size: 0.8rem;
-      color: #7d8590;
-    }
-
-    .edit-profile-btn:hover {
-      background-color: #1f242e;
-      border-color: #6e7683;
-    }
-
-    /* stats row: contributions + meta info */
-    .stats-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      gap: 1rem;
-    }
-
-    .contributions {
-      background: #161b22;
-      border-radius: 24px;
-      padding: 0.4rem 1rem 0.4rem 1rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-      border: 1px solid #21262d;
-    }
-
-    .contributions i {
-      color: #3fb950;
-      font-size: 1rem;
-    }
-
-    .contributions span {
-      font-weight: 600;
-      color: #e6edf3;
-    }
-
-    /* right side weather / time widget (matching footer vibe) */
-    .right-widgets {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      background: #161b22;
-      padding: 0.3rem 1rem;
-      border-radius: 32px;
-      border: 1px solid #21262d;
-    }
-
-    .weather {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
-
-    .weather i {
-      color: #f0883e;
-      font-size: 0.9rem;
-    }
-
-    .lang-time {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: #8b949e;
-      border-left: 1px solid #30363d;
-      padding-left: 0.8rem;
-    }
-
-    .lang-time i {
-      font-size: 0.7rem;
-      color: #6e7681;
-    }
-
-    /* SEARCH BAR SECTION */
-    .search-section {
-      margin-bottom: 2rem;
-    }
-
-    .search-container {
-      display: flex;
-      align-items: center;
-      background-color: #0d1117;
-      border: 1px solid #3d444d;
-      border-radius: 48px;
-      padding: 0.4rem 1rem;
-      transition: all 0.2s;
-      max-width: 360px;
-    }
-
-    .search-container i {
-      color: #7d8590;
-      font-size: 1rem;
-      margin-right: 0.6rem;
-    }
-
-    .search-container input {
-      background: transparent;
-      border: none;
-      outline: none;
-      font-size: 0.9rem;
-      width: 100%;
-      color: #e6edf3;
-      font-weight: 400;
-      font-family: inherit;
-    }
-
-    .search-container input::placeholder {
-      color: #6e7681;
-      font-weight: 400;
-    }
-
-    .search-container:focus-within {
-      border-color: #2f81f7;
-      box-shadow: 0 0 0 2px rgba(47, 129, 247, 0.3);
-    }
-
-    /* PINNED HEADER + CUSTOMIZE BUTTONS */
-    .pinned-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
-      margin-top: 0.5rem;
-    }
-
-    .pinned-header h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      letter-spacing: -0.2px;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .pinned-header h3 i {
-      color: #f1e05a;
-      font-size: 1rem;
-    }
-
-    .customize-btn {
-      background: transparent;
-      border: 1px solid #3d444d;
-      border-radius: 30px;
-      padding: 0.3rem 1rem;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: #c9d1d9;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: default;
-      transition: 0.2s;
-    }
-
-    .customize-btn i {
-      font-size: 0.7rem;
-    }
-
-    .customize-btn:hover {
-      background-color: #21262d;
-    }
-
-    /* Pinned items grid - two column layout like GitHub */
-    .pinned-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 1.2rem;
-      margin-bottom: 1.5rem;
-    }
-
-    /* repo card (pinned item style) */
-    .repo-card {
-      background-color: #161b22;
-      border-radius: 16px;
-      border: 1px solid #30363d;
-      padding: 1rem 1.2rem 1rem 1.2rem;
-      transition: transform 0.1s ease, border-color 0.2s;
-    }
-
-    .repo-card:hover {
-      border-color: #4a5568;
-      background-color: #1a1f28;
-    }
-
-    .repo-header {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 0.65rem;
-    }
-
-    .repo-header i {
-      font-size: 1.1rem;
-      color: #7d8590;
-    }
-
-    .repo-name {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #2f81f7;
-      letter-spacing: -0.2px;
-    }
-
-    .repo-badge {
-      background-color: #21262d;
-      border-radius: 20px;
-      padding: 0.2rem 0.5rem;
-      font-size: 0.65rem;
-      font-weight: 500;
-      color: #8b949e;
-      margin-left: 0.4rem;
-    }
-
-    .repo-description {
-      font-size: 0.8rem;
-      color: #b1bac4;
-      margin-bottom: 1rem;
-      line-height: 1.4;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .repo-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: center;
-      font-size: 0.7rem;
-      color: #8b949e;
-    }
-
-    .repo-language {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .lang-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .lang-dot.javascript {
-      background-color: #f1e05a;
-    }
-    .lang-dot.python {
-      background-color: #3572A5;
-    }
-    .lang-dot.typescript {
-      background-color: #3178c6;
-    }
-    .lang-dot.go {
-      background-color: #00ADD8;
-    }
-    .lang-dot.ruby {
-      background-color: #701516;
-    }
-
-    .repo-stars, .repo-forks {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .repo-updated {
-      font-size: 0.7rem;
-    }
-
-    /* footer area: additional hot days / status / timezone */
-    .footer-strip {
-      margin-top: 1.5rem;
-      padding-top: 1rem;
-      border-top: 1px solid #21262d;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      font-size: 0.75rem;
-      color: #7d8590;
-    }
-
-    .hot-days {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: rgba(240, 136, 62, 0.12);
-      padding: 0.25rem 0.9rem;
-      border-radius: 32px;
-      border: 1px solid rgba(240, 136, 62, 0.3);
-    }
-
-    .hot-days i {
-      color: #f0883e;
-    }
-
-    .locale-info {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .locale-info span {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    /* responsiveness */
-    @media (max-width: 700px) {
-      .card-content {
-        padding: 1.2rem;
-      }
-      .pinned-grid {
-        grid-template-columns: 1fr;
-      }
-      .stats-row {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .right-widgets {
-        align-self: flex-start;
-      }
-    }
-
-    /* dummy button effects (just static but interactive hover) */
-    .fake-link {
-      cursor: default;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vaibhav Yadav — GitHub Profile</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+:root{--bg:#0a0d13;--surface:#0f1318;--card:#141920;--border:#1e2733;--border-bright:#2a3547;--text:#e8edf5;--muted:#5a6a82;--cyan:#00d4ff;--orange:#ff6b35;--green:#39ff85;--purple:#9b7dff;--yellow:#ffd166;--pink:#ff4da6;--mono:'Space Mono',monospace;--sans:'Outfit',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:drift 12s ease-in-out infinite alternate}
+.orb-1{width:400px;height:400px;background:rgba(0,212,255,.06);top:-100px;left:-100px}
+.orb-2{width:300px;height:300px;background:rgba(155,125,255,.07);bottom:0;right:-50px;animation-delay:-4s}
+.orb-3{width:200px;height:200px;background:rgba(255,107,53,.05);top:50%;left:50%;animation-delay:-8s}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,20px) scale(1.1)}}
+.wrapper{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:40px 24px 80px}
+.hero{text-align:center;padding:60px 20px 50px;animation:fadeUp .7s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);border-radius:20px;padding:6px 16px;font-size:12px;font-family:var(--mono);color:var(--cyan);margin-bottom:28px;letter-spacing:.05em}
+.hero-badge::before{content:'';width:6px;height:6px;background:var(--cyan);border-radius:50%;box-shadow:0 0 8px var(--cyan);animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-name{font-size:clamp(42px,8vw,72px);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:12px;background:linear-gradient(135deg,#fff 0%,var(--cyan) 50%,var(--purple) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-handle{font-family:var(--mono);font-size:16px;color:var(--muted);margin-bottom:20px;letter-spacing:.08em}
+.hero-handle span{color:var(--cyan)}
+.hero-tagline{font-size:18px;font-weight:400;color:#8a9ab5;max-width:500px;margin:0 auto 36px;line-height:1.6}
+.hero-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-link{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;transition:all .2s;border:1px solid var(--border-bright);background:var(--card);color:var(--text)}
+.hero-link:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:0 8px 24px rgba(0,212,255,.15)}
+.hero-link.primary{background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(155,125,255,.15));border-color:rgba(0,212,255,.4);color:var(--cyan)}
+.section{margin-bottom:40px;animation:fadeUp .6s ease both}
+.section:nth-child(2){animation-delay:.1s}.section:nth-child(3){animation-delay:.2s}.section:nth-child(4){animation-delay:.3s}.section:nth-child(5){animation-delay:.4s}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.section-icon{font-size:22px}.section-title{font-size:22px;font-weight:800;letter-spacing:-.5px;color:var(--text)}
+.section-line{flex:1;height:1px;background:linear-gradient(90deg,var(--border-bright),transparent)}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 20px;text-align:center;position:relative;overflow:hidden;transition:all .3s;cursor:default}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:16px 16px 0 0}
+.stat-card.contributions::before{background:linear-gradient(90deg,var(--cyan),var(--purple))}
+.stat-card.streak::before{background:linear-gradient(90deg,var(--orange),var(--yellow))}
+.stat-card.longest::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.stat-card:hover{transform:translateY(-4px);border-color:var(--border-bright);box-shadow:0 16px 40px rgba(0,0,0,.4)}
+.stat-value{font-size:48px;font-weight:900;line-height:1;margin-bottom:8px;font-family:var(--mono)}
+.stat-card.contributions .stat-value{color:var(--cyan)}.stat-card.streak .stat-value{color:var(--orange)}.stat-card.longest .stat-value{color:var(--green)}
+.stat-label{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.stat-sub{font-size:11px;color:var(--muted);font-family:var(--mono);opacity:.7}
+.streak-ring{width:80px;height:80px;margin:0 auto 12px;position:relative}
+.streak-ring svg{transform:rotate(-90deg)}
+.streak-ring .track{fill:none;stroke:rgba(255,107,53,.15);stroke-width:6}
+.streak-ring .fill{fill:none;stroke:var(--orange);stroke-width:6;stroke-linecap:round;stroke-dasharray:220;stroke-dashoffset:176;animation:ringFill 1.5s ease .5s both;filter:drop-shadow(0 0 6px var(--orange))}
+@keyframes ringFill{from{stroke-dashoffset:220}to{stroke-dashoffset:176}}
+.streak-ring .ring-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;font-family:var(--mono);color:var(--orange)}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;overflow:hidden}
+.chart-title{font-size:13px;font-family:var(--mono);color:var(--muted);text-align:center;margin-bottom:20px;letter-spacing:.05em}
+.chart-title span{color:var(--cyan)}
+.chart-area{position:relative;height:160px}
+.chart-area svg{width:100%;height:100%}
+.tech-category{margin-bottom:20px}
+.tech-cat-label{font-size:12px;font-family:var(--mono);color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.tech-cat-label::before{content:'';width:20px;height:1px;background:var(--border-bright)}
+.badge-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.tech-badge{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:.08em;font-family:var(--mono);border:1px solid transparent;transition:all .2s;cursor:default}
+.tech-badge:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.badge-cpp{background:rgba(0,89,220,.15);border-color:rgba(0,89,220,.4);color:#4da6ff}
+.badge-py{background:rgba(255,214,0,.1);border-color:rgba(255,214,0,.35);color:#ffd500}
+.badge-js{background:rgba(240,219,79,.12);border-color:rgba(240,219,79,.35);color:#f0db4f}
+.badge-ts{background:rgba(49,120,198,.15);border-color:rgba(49,120,198,.4);color:#3178c6}
+.badge-react{background:rgba(97,218,251,.1);border-color:rgba(97,218,251,.3);color:#61dafb}
+.badge-next{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15);color:#fff}
+.badge-tw{background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.3);color:#38bdf8}
+.badge-node{background:rgba(104,160,99,.15);border-color:rgba(104,160,99,.4);color:#68a063}
+.badge-express{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);color:#aaa}
+.badge-mongo{background:rgba(77,179,61,.12);border-color:rgba(77,179,61,.3);color:#4db33d}
+.badge-pg{background:rgba(51,103,145,.18);border-color:rgba(51,103,145,.45);color:#336791}
+.badge-docker{background:rgba(0,150,250,.12);border-color:rgba(0,150,250,.3);color:#0096fa}
+.badge-aws{background:rgba(255,153,0,.12);border-color:rgba(255,153,0,.35);color:#ff9900}
+.badge-git{background:rgba(240,80,50,.12);border-color:rgba(240,80,50,.35);color:#f05032}
+.badge-actions{background:rgba(38,137,255,.12);border-color:rgba(38,137,255,.3);color:#2689ff}
+.cp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px}
+.cp-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;transition:all .2s;cursor:pointer}
+.cp-card:hover{transform:translateY(-3px);border-color:var(--border-bright);box-shadow:0 12px 30px rgba(0,0,0,.3)}
+.cp-platform{font-size:13px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.cp-handle{font-size:15px;font-weight:700;color:var(--text)}
+.cp-badge{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:700;font-family:var(--mono)}
+.cp-badge.cf{background:rgba(57,255,133,.12);border:1px solid rgba(57,255,133,.3);color:var(--green)}
+.cp-badge.lc{background:rgba(255,161,22,.12);border:1px solid rgba(255,161,22,.3);color:#ffa116}
+.cp-badge.cc{background:rgba(255,77,53,.12);border:1px solid rgba(255,77,53,.3);color:#ff4d35}
+.solved-banner{background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(255,209,102,.1));border:1px solid rgba(255,107,53,.3);border-radius:12px;padding:20px 28px;display:flex;align-items:center;justify-content:center;gap:16px}
+.solved-text{font-size:13px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.solved-count{font-size:28px;font-weight:900;font-family:var(--mono);background:linear-gradient(135deg,var(--orange),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.solved-platforms{font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:4px;letter-spacing:.05em}
+.footer{text-align:center;margin-top:60px;padding-top:30px;border-top:1px solid var(--border);font-size:12px;font-family:var(--mono);color:var(--muted)}
+.footer span{color:var(--cyan)}
+</style>
 </head>
 <body>
-<div class="github-card">
-  <div class="card-content">
-    
-    <!-- Header: GitHub title + Edit profile (matches description) -->
-    <div class="profile-header">
-      <div class="title-section">
-        <h1><i class="fab fa-github" style="margin-right: 8px; color: #e6edf3;"></i> GitHub · Your pins have been updated.</h1>
-      </div>
-      <button class="edit-profile-btn" aria-label="Edit profile (static demo)">
-        <i class="fas fa-pencil-alt"></i> Edit profile
-      </button>
-    </div>
-
-    <!-- contributions & right widget: 170 contributions + weather/time/ENG/IN -->
-    <div class="stats-row">
-      <div class="contributions">
-        <i class="fas fa-chart-simple"></i>
-        <span>170 contributions</span> in the last year
-      </div>
-      <div class="right-widgets">
-        <div class="weather">
-          <i class="fas fa-sun"></i>
-          <span>Hot days ahead</span>
-          <strong>30°C</strong>
-        </div>
-        <div class="lang-time">
-          <span><i class="fas fa-globe"></i> ENG</span>
-          <span><i class="fas fa-percent"></i> 52%</span>
-          <span><i class="fas fa-map-marker-alt"></i> IN</span>
-          <span><i class="far fa-clock"></i> 3:25 PM</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Search bar (exactly as described) -->
-    <div class="search-section">
-      <div class="search-container">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Search" value="Search">
-      </div>
-    </div>
-
-    <!-- Pinned section header + Customize your pins button -->
-    <div class="pinned-header">
-      <h3>
-        <i class="fas fa-thumbtack"></i> Pinned
-      </h3>
-      <button class="customize-btn">
-        <i class="fas fa-sliders-h"></i> Customize your pins
-      </button>
-    </div>
-
-    <!-- Pinned repositories grid: mimicking "Vaibhav Yadav / v-vaibhav07" and other pinned repos -->
-    <div class="pinned-grid">
-      <!-- Card 1: Vaibhav Yadav / v-vaibhav07 (public) main pinned repo -->
-      <div class="repo-card">
-        <div class="repo-header">
-          <i class="fas fa-book-open"></i>
-          <span class="repo-name">Vaibhav Yadav / v-vaibhav07</span>
-          <span class="repo-badge">Public</span>
-        </div>
-        <div class="repo-description">
-          Personal portfolio & experimental monorepo — fullstack projects, modern web utilities, and design systems.
-        </div>
-        <div class="repo-meta">
-          <div class="repo-language">
-            <span class="lang-dot typescript"></span>
-            <span>TypeScript</span>
-          </div>
-          <div class="repo-stars">
-            <i class="far fa-star"></i> 284
-          </div>
-          <div class="repo-forks">
-            <i class="fas fa-code-branch"></i> 43
-          </div>
-          <div class="repo-updated">
-            Updated 2d ago
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 2: Another pinned project (showing contributions / popularity) -->
-      <div class="repo-card">
-        <div class="repo-header">
-          <i class="fas fa-database"></i>
-          <span class="repo-name">nebula-cli</span>
-          <span class="repo-badge">Public</span>
-        </div>
-        <div class="repo-description">
-          Lightning-fast CLI tool for scaffolding microservices with built-in support for Go and Python runtimes.
-        </div>
-        <div class="repo-meta">
-          <div class="repo-language">
-            <span class="lang-dot go"></span>
-            <span>Go</span>
-          </div>
-          <div class="repo-stars">
-            <i class="far fa-star"></i> 1.2k
-          </div>
-          <div class="repo-forks">
-            <i class="fas fa-code-branch"></i> 97
-          </div>
-          <div class="repo-updated">
-            Updated 5h ago
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3: Additional pinned repo to fill grid (keeping design consistent) -->
-      <div class="repo-card">
-        <div class="repo-header">
-          <i class="fas fa-chart-line"></i>
-          <span class="repo-name">react-hooks-kit</span>
-          <span class="repo-badge">Public</span>
-        </div>
-        <div class="repo-description">
-          Production-ready React hooks library: useFetch, useLocalStorage, useDebounce, and more.
-        </div>
-        <div class="repo-meta">
-          <div class="repo-language">
-            <span class="lang-dot javascript"></span>
-            <span>JavaScript</span>
-          </div>
-          <div class="repo-stars">
-            <i class="far fa-star"></i> 659
-          </div>
-          <div class="repo-forks">
-            <i class="fas fa-code-branch"></i> 112
-          </div>
-          <div class="repo-updated">
-            Updated 1 week ago
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 4: Fourth pinned to match GitHub style often shows 4–6 items -->
-      <div class="repo-card">
-        <div class="repo-header">
-          <i class="fas fa-cloud-sun"></i>
-          <span class="repo-name">weatherflow-api</span>
-          <span class="repo-badge">Public</span>
-        </div>
-        <div class="repo-description">
-          Real-time weather ingestion and forecasting pipeline with Python FastAPI + Redis streams.
-        </div>
-        <div class="repo-meta">
-          <div class="repo-language">
-            <span class="lang-dot python"></span>
-            <span>Python</span>
-          </div>
-          <div class="repo-stars">
-            <i class="far fa-star"></i> 321
-          </div>
-          <div class="repo-forks">
-            <i class="fas fa-code-branch"></i> 28
-          </div>
-          <div class="repo-updated">
-            Updated 3d ago
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer exactly matching spec: "Hot days ahead 30°C | ENG 52% IN 3:25 PM" -->
-    <div class="footer-strip">
-      <div class="hot-days">
-        <i class="fas fa-temperature-high"></i> Hot days ahead
-        <strong>30°C</strong>
-      </div>
-      <div class="locale-info">
-        <span><i class="fas fa-language"></i> ENG</span>
-        <span><i class="fas fa-chart-simple"></i> 52%</span>
-        <span><i class="fas fa-flag-checkered"></i> IN</span>
-        <span><i class="far fa-clock"></i> 3:25 PM</span>
-      </div>
-    </div>
-
-    <!-- subtle note: all interactive elements are non-functional but reflect visual accuracy -->
-    <div style="font-size: 10px; text-align: center; margin-top: 1rem; opacity: 0.4; letter-spacing: 0.3px;">
-      ⚡ GitHub style · Pinned items showcase
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="wrapper">
+  <div class="hero section">
+    <div class="hero-badge">🟢 Open to opportunities</div>
+    <h1 class="hero-name">Vaibhav Yadav</h1>
+    <div class="hero-handle"><span>@</span>v-vaibhav07</div>
+    <p class="hero-tagline">Full-Stack Developer &amp; Competitive Programmer — building fast, scalable, and beautiful things.</p>
+    <div class="hero-links">
+      <a class="hero-link primary" href="https://github.com/v-vaibhav07">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub Profile
+      </a>
+      <a class="hero-link" href="mailto:vaibhavyadav6533@gmail.com">📧 vaibhavyadav6533@gmail.com</a>
+      <a class="hero-link" href="#">💼 LinkedIn</a>
     </div>
   </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">📊</span><span class="section-title">GitHub Stats</span><div class="section-line"></div></div>
+    <div class="stats-grid">
+      <div class="stat-card contributions">
+        <div class="stat-value" id="contribCount">0</div>
+        <div class="stat-label">Total Contributions</div>
+        <div class="stat-sub">Jan 25, 2025 — Present</div>
+      </div>
+      <div class="stat-card streak">
+        <div class="streak-ring">
+          <svg viewBox="0 0 80 80"><circle class="track" cx="40" cy="40" r="35"/><circle class="fill" cx="40" cy="40" r="35"/></svg>
+          <div class="ring-inner">6</div>
+        </div>
+        <div class="stat-label">Current Streak 🔥</div>
+        <div class="stat-sub">Apr 4 — Apr 9</div>
+      </div>
+      <div class="stat-card longest">
+        <div class="stat-value">13</div>
+        <div class="stat-label">Longest Streak</div>
+        <div class="stat-sub">Mar 17 — Mar 29</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">🔥</span><span class="section-title">Contribution Graph</span><div class="section-line"></div></div>
+    <div class="chart-card">
+      <div class="chart-title"><span>Vaibhav</span>'s Contribution Activity</div>
+      <div class="chart-area">
+        <svg id="contribChart" viewBox="0 0 800 160" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#00d4ff" stop-opacity="0.02"/>
+            </linearGradient>
+            <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <line x1="0" y1="32" x2="800" y2="32" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <line x1="0" y1="64" x2="800" y2="64" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <line x1="0" y1="96" x2="800" y2="96" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <line x1="0" y1="128" x2="800" y2="128" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <text x="0" y="30" fill="rgba(255,255,255,0.25)" font-size="10" font-family="Space Mono">35</text>
+          <text x="0" y="62" fill="rgba(255,255,255,0.25)" font-size="10" font-family="Space Mono">25</text>
+          <text x="0" y="95" fill="rgba(255,255,255,0.25)" font-size="10" font-family="Space Mono">15</text>
+          <text x="0" y="127" fill="rgba(255,255,255,0.25)" font-size="10" font-family="Space Mono">5</text>
+          <path id="chartArea" fill="url(#chartGrad)"/>
+          <path id="chartLine" fill="none" stroke="#00d4ff" stroke-width="2" filter="url(#glow)" stroke-linecap="round" stroke-linejoin="round"/>
+          <g id="chartDots"></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">⚡</span><span class="section-title">Tech Arsenal</span><div class="section-line"></div></div>
+    <div class="tech-category">
+      <div class="tech-cat-label">💻 Languages</div>
+      <div class="badge-row">
+        <span class="tech-badge badge-cpp">⚙ C++</span>
+        <span class="tech-badge badge-py">🐍 Python</span>
+        <span class="tech-badge badge-js">JS JavaScript</span>
+        <span class="tech-badge badge-ts">TS TypeScript</span>
+      </div>
+    </div>
+    <div class="tech-category">
+      <div class="tech-cat-label">🌐 Frontend</div>
+      <div class="badge-row">
+        <span class="tech-badge badge-react">⚛ React</span>
+        <span class="tech-badge badge-next">▲ Next.js</span>
+        <span class="tech-badge badge-tw">🌊 Tailwind</span>
+      </div>
+    </div>
+    <div class="tech-category">
+      <div class="tech-cat-label">🛠 Backend &amp; Databases</div>
+      <div class="badge-row">
+        <span class="tech-badge badge-node">🟢 Node.js</span>
+        <span class="tech-badge badge-express">EX Express</span>
+        <span class="tech-badge badge-mongo">🍃 MongoDB</span>
+        <span class="tech-badge badge-pg">🐘 PostgreSQL</span>
+      </div>
+    </div>
+    <div class="tech-category">
+      <div class="tech-cat-label">☁ DevOps &amp; Tools</div>
+      <div class="badge-row">
+        <span class="tech-badge badge-docker">🐳 Docker</span>
+        <span class="tech-badge badge-aws">☁ AWS</span>
+        <span class="tech-badge badge-git">🔥 Git</span>
+        <span class="tech-badge badge-actions">⚡ Actions</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">🧠</span><span class="section-title">Competitive Programming</span><div class="section-line"></div></div>
+    <div class="cp-grid">
+      <div class="cp-card"><div><div class="cp-platform">Codeforces</div><div class="cp-handle">SIDHANT08</div></div><span class="cp-badge cf">Active</span></div>
+      <div class="cp-card"><div><div class="cp-platform">LeetCode</div><div class="cp-handle">SIDHANT_8</div></div><span class="cp-badge lc">1800+</span></div>
+      <div class="cp-card"><div><div class="cp-platform">CodeChef</div><div class="cp-handle">SIDHANT_8</div></div><span class="cp-badge cc">Active</span></div>
+    </div>
+    <div class="solved-banner">
+      <div>
+        <div class="solved-text">🔥 Total Problems Solved</div>
+        <div class="solved-platforms">LeetCode · Codeforces · CodeChef · GFG · AtCoder</div>
+      </div>
+      <div class="solved-count">1800+</div>
+    </div>
+  </div>
+
+  <div class="footer">Made with <span>♥</span> by Vaibhav Yadav &nbsp;·&nbsp; <span>v-vaibhav07</span></div>
 </div>
+
+<script>
+const el=document.getElementById('contribCount');let count=0;const target=316;const interval=setInterval(()=>{count+=Math.ceil((target-count)/12);if(count>=target){count=target;clearInterval(interval);}el.textContent=count;},40);
+const data=[35,10,6,4,5,4,7,11,12,9,14,13,10,8,12,11,10,8,7,9,8,7,6,8,9,6,7,8,10,8,5,4,6,5,4,3,2,3,4,3,2,3,4,3,2,3,2,3,2,3,2,3,2,3];
+const labels=Array.from({length:data.length},(_,i)=>String(10+i));
+const W=800,H=160,padL=28,padR=10,padT=10,padB=20,maxVal=Math.max(...data),plotW=W-padL-padR,plotH=H-padT-padB;
+const xs=data.map((_,i)=>padL+(i/(data.length-1))*plotW);
+const ys=data.map(v=>padT+plotH-(v/maxVal)*plotH);
+function smooth(pts){let d=`M ${pts[0][0]} ${pts[0][1]}`;for(let i=1;i<pts.length;i++){const cp1x=pts[i-1][0]+(pts[i][0]-pts[i-1][0])*.4,cp1y=pts[i-1][1],cp2x=pts[i][0]-(pts[i][0]-pts[i-1][0])*.4,cp2y=pts[i][1];d+=` C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${pts[i][0]} ${pts[i][1]}`;}return d;}
+const pts=xs.map((x,i)=>[x,ys[i]]);
+const linePath=smooth(pts);
+document.getElementById('chartLine').setAttribute('d',linePath);
+document.getElementById('chartArea').setAttribute('d',linePath+` L ${xs[xs.length-1]} ${H-padB} L ${xs[0]} ${H-padB} Z`);
+const dotsG=document.getElementById('chartDots');
+pts.forEach(([x,y],i)=>{if(i%4===0||data[i]===maxVal){const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');dot.setAttribute('cx',x);dot.setAttribute('cy',y);dot.setAttribute('r',data[i]===maxVal?5:3);dot.setAttribute('fill',data[i]===maxVal?'#ff6b35':'#00d4ff');dot.setAttribute('stroke','#0a0d13');dot.setAttribute('stroke-width','2');if(data[i]===maxVal)dot.setAttribute('filter','url(#glow)');dotsG.appendChild(dot);}});
+const line=document.getElementById('chartLine');
+const length=line.getTotalLength?.()||2000;
+line.style.strokeDasharray=length;line.style.strokeDashoffset=length;line.style.transition='stroke-dashoffset 2s cubic-bezier(0.4,0,0.2,1) 0.5s';
+setTimeout(()=>line.style.strokeDashoffset=0,100);
+</script>
 </body>
 </html>
