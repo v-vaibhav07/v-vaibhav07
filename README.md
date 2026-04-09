@@ -93,9 +93,9 @@ const vaibhav = {
 
 | Platform | Handle | Status |
 |:---:|:---:|:---:|
-| 🏆 **Codeforces** | [SIDHANT08](https://codeforces.com/profile/SIDHANT08) | ![Active](https://img.shields.io/badge/Active-39FF85?style=flat-square) |
-| 💡 **LeetCode** | [SIDHANT_8](https://leetcode.com/SIDHANT_8) | ![1800+](https://img.shields.io/badge/1800%2B-FFA116?style=flat-square) |
-| 👨‍💻 **CodeChef** | [SIDHANT_8](https://www.codechef.com/users/SIDHANT_8) | ![Active](https://img.shields.io/badge/Active-FF4D35?style=flat-square) |
+| 🏆 **Codeforces** | [v-vaibhav07](https://codeforces.com/profile/v-vaibhav07) | ![Active](https://img.shields.io/badge/Active-39FF85?style=flat-square) |
+| 💡 **LeetCode** | [v-vaibhav07](https://leetcode.com/v-vaibhav07) | ![1800+](https://img.shields.io/badge/1800%2B-FFA116?style=flat-square) |
+| 👨‍💻 **CodeChef** | [v-vaibhav07](https://www.codechef.com/users/v-vaibhav07) | ![Active](https://img.shields.io/badge/Active-FF4D35?style=flat-square) |
 
 <br/>
 
